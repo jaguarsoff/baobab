@@ -1,18 +1,19 @@
 from aiogram import Router
 from aiogram.types import Message
-from bot.calculations import calculate_item_price
+from aiogram.filters import Text
+from bot.config import settings
 
 router = Router()
 
+@router.message(Text("📏 Расчёт"))
+async def start_calc(message: Message):
+    await message.answer("Введите цену в юанях:")
+
 @router.message()
-async def calc_start(message: Message):
-    # if user clicked calc button, they may send like "120 shoes"
-    parts = message.text.split()
-    if len(parts) >= 2:
-        try:
-            price = float(parts[0])
-            cat = parts[1]
-            rub = calculate_item_price(cat, price)
-            await message.answer(f'Примерная цена: {rub:.0f} ₽ (включая доставку/комиссию)')
-        except:
-            pass
+async def calc_result(message: Message):
+    try:
+        price = float(message.text)
+        rub = price * settings.YUAN_RATE
+        await message.answer(f"По курсу: {rub} ₽")
+    except:
+        pass

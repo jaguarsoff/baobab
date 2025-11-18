@@ -1,39 +1,31 @@
 import asyncio
 from aiogram import Bot, Dispatcher
-from aiogram.fsm.storage.memory import MemoryStorage
 from bot.config import settings
-from bot.database import init_db
-from aiogram import types
+from bot.db import init_db
 
-# routers
 from bot.handlers.start import router as start_router
 from bot.handlers.menu import router as menu_router
 from bot.handlers.order import router as order_router
 from bot.handlers.cart import router as cart_router
-from bot.handlers.checkout import router as checkout_router
 from bot.handlers.calc import router as calc_router
+from bot.handlers.checkout import router as checkout_router
 from bot.handlers.my_orders import router as my_orders_router
-from bot.handlers.help import router as help_router
-from bot.handlers.admin import router as admin_router
+from bot.handlers.admin_panel import router as admin_router
 
 async def main():
     await init_db()
-    bot = Bot(token=settings.bot_token)
-    storage = MemoryStorage()
-    dp = Dispatcher(storage=storage)
+    bot = Bot(token=settings.BOT_TOKEN)
+    dp = Dispatcher()
 
-    # include routers
     dp.include_router(start_router)
     dp.include_router(menu_router)
     dp.include_router(order_router)
     dp.include_router(cart_router)
-    dp.include_router(checkout_router)
     dp.include_router(calc_router)
+    dp.include_router(checkout_router)
     dp.include_router(my_orders_router)
-    dp.include_router(help_router)
     dp.include_router(admin_router)
 
-    print('Bot started (aiogram v3, pydantic-settings)')
     await dp.start_polling(bot)
 
 if __name__ == '__main__':

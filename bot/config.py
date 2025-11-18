@@ -1,10 +1,8 @@
 from pydantic_settings import BaseSettings
-from pydantic import Field
 
 class Settings(BaseSettings):
-    bot_token: str = Field(..., env="BOT_TOKEN")
-    admin_ids: str = Field('', env="ADMINS")
-
+    BOT_TOKEN: str = "TOKEN"
+    ADMIN_ID: int = 123456
     YUAN_RATE: float = 12.3
     DELIVERY_PRICE_PER_KG: int = 600
     SHOES_FEE: int = 800
@@ -15,6 +13,5 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = ".env"
-        env_file_encoding = "utf-8"
 
 settings = Settings()
