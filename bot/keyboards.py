@@ -1,12 +1,20 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
 def main_menu():
-    buttons = [
-        [KeyboardButton('🛒 Заказать'), KeyboardButton('📦 Мои заказы')],
-        [KeyboardButton('🧾 Корзина'), KeyboardButton('💱 Расчёт')],
-        [KeyboardButton('❓ Помощь')]
-    ]
-    return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [
+                KeyboardButton(text="🛒 Заказать"),
+                KeyboardButton(text="📦 Мои заказы"),
+            ],
+            [
+                KeyboardButton(text="🧮 Расчёт"),
+                KeyboardButton(text="🛠 Помощь"),
+            ]
+        ],
+        resize_keyboard=True
+    )
+
 
 def cart_item_kb(item_id: int):
     return InlineKeyboardMarkup(inline_keyboard=[
