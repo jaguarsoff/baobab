@@ -1,35 +1,31 @@
-import aiosqlite
 
-DB_PATH = "database.db"
+import sqlite3
+
+DB_PATH = "/mnt/data/poizon.sqlite"
 
 async def init_db():
-    async with aiosqlite.connect(DB_PATH) as db:
-        await db.execute("""CREATE TABLE IF NOT EXISTS users (
-            user_id INTEGER PRIMARY KEY,
-            name TEXT,
-            phone TEXT
-        )""")
-        await db.execute("""CREATE TABLE IF NOT EXISTS cart (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER,
-            link TEXT,
-            size TEXT,
-            category TEXT,
-            price REAL
-        )""")
-        await db.execute("""CREATE TABLE IF NOT EXISTS orders (
-            order_id TEXT PRIMARY KEY,
-            user_id INTEGER,
-            tracking TEXT,
-            status TEXT,
-            created_at TEXT
-        )""")
-        await db.execute("""CREATE TABLE IF NOT EXISTS order_items (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            order_id TEXT,
-            link TEXT,
-            size TEXT,
-            category TEXT,
-            price REAL
-        )""")
-        await db.commit()
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("""CREATE TABLE IF NOT EXISTS orders(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        link TEXT,
+        size TEXT,
+        category TEXT,
+        quantity INTEGER,
+        price REAL,
+        weight REAL,
+        status TEXT
+    );""")
+    c.execute("""CREATE TABLE IF NOT EXISTS users(
+        id INTEGER PRIMARY KEY,
+        phone TEXT,
+        name TEXT
+    );""")
+    conn.commit(); conn.close()
+
+def new_order(user_id,link,size,category,qty,price,weight):
+    conn=sqlite3.connect(DB_PATH); c=conn.cursor()
+    c.execute("INSERT INTO orders(user_id,link,size,category,quantity,price,weight,status) VALUES(?,?,?,?,?,?,?,?)",
+              (user_id,link,size,category,qty,price,weight,"created"))
+    conn.commit(); conn.close()

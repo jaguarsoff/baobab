@@ -1,13 +1,11 @@
+
 from aiogram import Router
+from aiogram.filters import CommandStart
 from aiogram.types import Message
-from aiogram.filters import Command
 from bot.keyboards import main_menu
 
-router = Router()
+router=Router()
 
-@router.message(Command("start"))
-async def cmd_start(message: Message):
-    await message.answer(
-        "Привет! Я Poizon бот. Выберите действие:",
-        reply_markup=main_menu()
-    )
+@router.message(CommandStart())
+async def start(message: Message):
+    await message.answer("Добро пожаловать в Poizon Bot!", reply_markup=main_menu())
