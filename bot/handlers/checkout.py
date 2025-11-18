@@ -4,6 +4,7 @@ import aiosqlite
 from bot.database import DB_PATH
 from bot.utils import gen_order_uid, now
 from bot.calculations import calculate_cart_total
+from aiogram.filters import Command
 
 router = Router()
 
