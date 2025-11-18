@@ -1,7 +1,7 @@
 import aiosqlite
 from pathlib import Path
 
-DB_PATH = Path(__file__).resolve().parent.parent / 'poizon.db'
+DB_PATH = Path(__file__).resolve().parent.parent / 'poizon_v2.db'
 
 async def init_db():
     async with aiosqlite.connect(DB_PATH) as db:
@@ -20,7 +20,7 @@ async def init_db():
         )""")
         await db.execute("""CREATE TABLE IF NOT EXISTS orders(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            order_uid TEXT,
+            order_uid TEXT UNIQUE,
             user_id INTEGER,
             total_rub REAL,
             status TEXT,

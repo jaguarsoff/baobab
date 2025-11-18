@@ -3,25 +3,27 @@ from aiogram.types import Message
 from bot.config import settings
 import aiosqlite
 from bot.database import DB_PATH
-from aiogram import types
 
 router = Router()
 
-@router.message(F.text.startswith('/admin'))
+@router.message()
 async def admin_panel(message: Message):
-    admin_ids = [int(x.strip()) for x in settings.ADMIN_IDS.split(',') if x.strip()]
+    text = message.text.strip()
+    if not text.startswith('/admin'):
+        return
+    admin_ids = [int(x.strip()) for x in settings.admin_ids.split(',') if x.strip()]
     if message.from_user.id not in admin_ids:
         await message.answer('Нет доступа.')
         return
-    # simple admin commands: /admin orders, /admin set <order_uid> <status> <tracking?>
-    parts = message.text.split()
+    parts = text.split()
     if len(parts) >= 2 and parts[1] == 'orders':
         async with aiosqlite.connect(DB_PATH) as db:
-            rows = await db.execute_fetchall('SELECT order_uid, total_rub, status, tracking FROM orders ORDER BY id DESC LIMIT 50')
-        text = 'Последние заказы:\n'
+            cur = await db.execute('SELECT order_uid, total_rub, status, tracking FROM orders ORDER BY id DESC LIMIT 50')
+            rows = await cur.fetchall()
+        rtext = 'Последние заказы:\n'
         for r in rows:
-            text += f"{r[0]} — {r[2]} — {r[1]:.0f} ₽ — {r[3] or '-'}\n"
-        await message.answer(text)
+            rtext += f"{r[0]} — {r[2]} — {r[1]:.0f} ₽ — {r[3] or '-'}\n"
+        await message.answer(rtext)
         return
     if len(parts) >= 4 and parts[1] == 'set':
         order_uid = parts[2]
@@ -30,7 +32,6 @@ async def admin_panel(message: Message):
         async with aiosqlite.connect(DB_PATH) as db:
             await db.execute('UPDATE orders SET status=?, tracking=? WHERE order_uid=?', (new_status, tracking, order_uid))
             await db.commit()
-            # notify user
             cur = await db.execute('SELECT user_id FROM orders WHERE order_uid=?', (order_uid,))
             row = await cur.fetchone()
             if row:
@@ -38,4 +39,4 @@ async def admin_panel(message: Message):
                 await message.bot.send_message(user_id, f'Статус заказа #{order_uid} изменён: {new_status}. Трек: {tracking or "-"}')
         await message.answer('Готово.')
         return
-    await message.answer('Admin: /admin orders | /admin set <order_uid> <status> [tracking]') 
+    await message.answer('Admin: /admin orders | /admin set <order_uid> <status> [tracking]')

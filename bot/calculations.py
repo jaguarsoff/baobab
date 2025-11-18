@@ -16,9 +16,8 @@ def calculate_item_price(category: str, price_yuan: float, weight_kg: float = 1.
     return base + fee + delivery
 
 def calculate_cart_total(items):
-    # items: list of dicts with keys category, price_yuan, qty (optional), weight
+    # items: list of dicts with keys category, price_yuan, qty (optional), weight (optional)
     total = 0.0
-    # bulk discount: if shoes/clothes count >= BULK_DISCOUNT_COUNT apply BULK_PRICE per item beyond threshold? We'll implement simple rule:
     counts = {'shoes':0, 'clothes':0}
     for it in items:
         cat = it.get('category')
@@ -28,11 +27,11 @@ def calculate_cart_total(items):
 
     for it in items:
         cat = it.get('category')
-        price = float(it.get('price_yuan'))
+        price = float(it.get('price_yuan',0))
         qty = int(it.get('qty',1))
         weight = float(it.get('weight',1.0))
         per = calculate_item_price(cat, price, weight)
-        # Apply bulk discount for clothes/shoes when count >= BULK_DISCOUNT_COUNT
+        # Apply bulk discount: if total count of this category >= BULK_DISCOUNT_COUNT, price replaced by BULK_PRICE per item
         if cat in ('shoes','clothes') and counts.get(cat,0) >= settings.BULK_DISCOUNT_COUNT:
             per = settings.BULK_PRICE + settings.DELIVERY_PRICE_PER_KG * weight
         total += per * qty

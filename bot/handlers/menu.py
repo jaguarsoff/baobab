@@ -12,17 +12,17 @@ router = Router()
 async def on_order_button(message: Message):
     await start_order_flow(message)
 
+@router.message(F.text == '🧾 Мои заказы')
+async def on_my_orders(message: Message):
+    await my_orders(message)
+
 @router.message(F.text == '🧾 Корзина')
-async def on_cart_button(message: Message):
+async def on_cart(message: Message):
     await show_cart(message)
 
 @router.message(F.text == '💱 Расчёт')
-async def on_calc_button(message: Message):
+async def on_calc(message: Message):
     await calc_start(message)
-
-@router.message(F.text == '📦 Мои заказы')
-async def on_my_orders(message: Message):
-    await my_orders(message)
 
 @router.message(F.text == '❓ Помощь')
 async def on_help(message: Message):

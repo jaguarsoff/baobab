@@ -1,15 +1,12 @@
-from aiogram import Router, F
+from aiogram import Router
 from aiogram.types import Message
 from bot.calculations import calculate_item_price
 
 router = Router()
 
-@router.message(F.text == '💱 Расчёт')
-async def calc_start(message: Message):
-    await message.answer('Отправьте цену в юанях и категорию через пробел: например "120 shoes"')
-
 @router.message()
-async def calc_process(message: Message):
+async def calc_start(message: Message):
+    # if user clicked calc button, they may send like "120 shoes"
     parts = message.text.split()
     if len(parts) >= 2:
         try:

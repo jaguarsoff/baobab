@@ -11,7 +11,8 @@ router = Router()
 async def show_cart(message: Message):
     user_id = message.from_user.id
     async with aiosqlite.connect(DB_PATH) as db:
-        rows = await db.execute_fetchall('SELECT id, link, size, category, price_yuan FROM cart WHERE user_id=?', (user_id,))
+        cur = await db.execute('SELECT id, link, size, category, price_yuan FROM cart WHERE user_id=?', (user_id,))
+        rows = await cur.fetchall()
     if not rows:
         await message.answer('Ваша корзина пуста.')
         return

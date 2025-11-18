@@ -1,7 +1,7 @@
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
-from aiogram.filters.state import StatesGroup, State
+from aiogram.filters.state import State, StatesGroup
 import aiosqlite
 from bot.database import DB_PATH
 from bot.utils import now
@@ -13,7 +13,6 @@ class OrderStates(StatesGroup):
     waiting_category = State()
     waiting_size = State()
     waiting_price = State()
-    confirm = State()
 
 async def start_order_flow(message: Message):
     await message.answer('Отправьте ссылку на товар:')
@@ -48,7 +47,6 @@ async def process_price(message: Message, state: FSMContext):
     link = data.get('link')
     cat = data.get('category')
     size = data.get('size')
-    # save to cart
     user_id = message.from_user.id
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute('INSERT INTO cart(user_id, link, size, category, price_yuan) VALUES (?,?,?,?,?)',

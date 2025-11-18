@@ -1,8 +1,9 @@
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
+from pydantic import Field
 
 class Settings(BaseSettings):
-    BOT_TOKEN: str
-    ADMIN_IDS: str
+    bot_token: str = Field(..., env="BOT_TOKEN")
+    admin_ids: str = Field('', env="ADMINS")
 
     YUAN_RATE: float = 12.3
     DELIVERY_PRICE_PER_KG: int = 600
@@ -13,6 +14,7 @@ class Settings(BaseSettings):
     SMALL_ITEM_PERCENT: float = 1.0
 
     class Config:
-        env_file = '../.env'  # when running from project root
+        env_file = ".env"
+        env_file_encoding = "utf-8"
 
 settings = Settings()

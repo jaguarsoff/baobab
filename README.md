@@ -1,19 +1,17 @@
-Poizon AIogram Bot
-==================
+Poizon AIogram Bot (v2/pydantic-settings)
+========================================
 
-This project is a full-featured Poizon ordering bot built with aiogram 3.x.
+Запуск:
+1. python3 -m venv venv
+2. source venv/bin/activate
+3. pip install -r requirements.txt
+4. заполнить .env (BOT_TOKEN, ADMINS)
+5. python main.py
 
-Features:
-- Menu-driven navigation
-- Cart (add/remove/list)
-- Order checkout with contact storage
-- Price calculation (CNY->RUB) with delivery & fees
-- Admin panel: list orders, change status, notify users
-- Notifications on status change
-- SQLite storage with aiosqlite
-- FSM for guided flows
-
-Run:
-1. pip3 install -r requirements.txt
-2. Fill .env with BOT_TOKEN and ADMIN_IDS
-3. python3 main.py
+Функции:
+- Меню кнопок
+- Добавление товара в корзину (FSM)
+- Просмотр/удаление позиций в корзине
+- Расчёт стоимости по правилам (курс, доставка, комиссии, скидки)
+- Оформление заказа, сохранение контактов
+- Админ: просмотр заказов, смена статуса и уведомление пользователя
