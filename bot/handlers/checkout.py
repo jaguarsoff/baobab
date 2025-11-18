@@ -7,7 +7,7 @@ from bot.calculations import calculate_cart_total
 
 router = Router()
 
-@router.message(commands=['checkout'])
+@router.message(Command("checkout"))
 async def checkout(message: Message):
     user_id = message.from_user.id
     async with aiosqlite.connect(DB_PATH) as db:
