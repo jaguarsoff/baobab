@@ -1,5 +1,6 @@
 
 FROM python:3.11
+RUN mkdir -p /app/data
 WORKDIR /app
 COPY . .
 RUN pip install -r requirements.txt
