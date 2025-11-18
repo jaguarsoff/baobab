@@ -1,28 +1,28 @@
-
 import sqlite3
+import os
 
-DB_PATH = "/mnt/data/poizon.sqlite"
+DB_PATH = "/app/data/database.db"
 
 async def init_db():
+    # Создаем директорию, если её нет
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+
     conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("""CREATE TABLE IF NOT EXISTS orders(
+    cursor = conn.cursor()
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS orders (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
-        link TEXT,
-        size TEXT,
         category TEXT,
-        quantity INTEGER,
-        price REAL,
+        size TEXT,
         weight REAL,
-        status TEXT
-    );""")
-    c.execute("""CREATE TABLE IF NOT EXISTS users(
-        id INTEGER PRIMARY KEY,
-        phone TEXT,
-        name TEXT
-    );""")
-    conn.commit(); conn.close()
+        price REAL,
+        total REAL,
+        status TEXT DEFAULT 'new'
+    )
+    """)
+    conn.commit()
+    conn.close()
 
 def new_order(user_id,link,size,category,qty,price,weight):
     conn=sqlite3.connect(DB_PATH); c=conn.cursor()
